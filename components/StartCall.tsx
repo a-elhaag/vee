@@ -1,17 +1,24 @@
 import { useVoice } from "@humeai/voice-react";
 import { AnimatePresence, motion } from "motion/react";
 import { Button } from "./ui/button";
-import { Phone } from "lucide-react";
 import { toast } from "sonner";
 
-export default function StartCall({ configId, accessToken }: { configId?: string, accessToken: string }) {
+export default function StartCall({
+  configId,
+  accessToken,
+}: {
+  configId?: string;
+  accessToken: string;
+}) {
   const { status, connect } = useVoice();
 
   return (
     <AnimatePresence>
       {status.value !== "connected" ? (
         <motion.div
-          className={"fixed inset-0 p-4 flex items-center justify-center bg-background"}
+          className={
+            "fixed inset-0 flex items-center justify-center bg-[#0A0A0A] relative overflow-hidden"
+          }
           initial="initial"
           animate="enter"
           exit="exit"
@@ -21,22 +28,47 @@ export default function StartCall({ configId, accessToken }: { configId?: string
             exit: { opacity: 0 },
           }}
         >
-          <AnimatePresence>
+          {/* Texture overlay */}
+          <div className="absolute inset-0 texture-overlay"></div>
+
+          <div className="flex flex-col items-center justify-center max-w-2xl mx-auto px-6 text-center relative z-10">
+            {/* VEE Logo/Branding */}
             <motion.div
-              variants={{
-                initial: { scale: 0.5 },
-                enter: { scale: 1 },
-                exit: { scale: 0.5 },
-              }}
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+              className="mb-12"
+            >
+              <h1 className="font-vee text-[12rem] md:text-[16rem] leading-none text-vee-red mb-6">
+                VEE
+              </h1>
+              <div className="h-1 w-40 bg-vee-red mx-auto rounded-full"></div>
+            </motion.div>
+
+            {/* Tagline */}
+            <motion.h2
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+              className="font-vee text-3xl md:text-5xl text-white/90 mb-16 uppercase tracking-tight"
+            >
+              READY TO TALK?
+            </motion.h2>
+
+            {/* Main CTA Button */}
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.6, duration: 0.5 }}
+              className="mb-12"
             >
               <Button
-                className={"z-50 flex items-center gap-1.5 rounded-full"}
+                size="lg"
+                className="text-base px-12 py-8 h-auto animate-pulse-red font-bold tracking-widest rounded-2xl shadow-soft"
                 onClick={() => {
-                  connect({ 
+                  connect({
                     auth: { type: "accessToken", value: accessToken },
-                    configId, 
-                    // additional options can be added here
-                    // like resumedChatGroupId and sessionSettings
+                    configId,
                   })
                     .then(() => {})
                     .catch(() => {
@@ -45,16 +77,18 @@ export default function StartCall({ configId, accessToken }: { configId?: string
                     .finally(() => {});
                 }}
               >
-                <span>
-                  <Phone
-                    className={"size-4 opacity-50 fill-current"}
-                    strokeWidth={0}
-                  />
-                </span>
-                <span>Start Call</span>
+                TAP TO CONNECT
               </Button>
             </motion.div>
-          </AnimatePresence>
+
+            {/* Subtle accent line */}
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ delay: 1, duration: 0.8 }}
+              className="mt-8 h-px w-64 bg-gradient-to-r from-transparent via-vee-red/50 to-transparent rounded-full"
+            ></motion.div>
+          </div>
         </motion.div>
       ) : null}
     </AnimatePresence>

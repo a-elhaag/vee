@@ -1,7 +1,7 @@
 "use client";
 import { useVoice } from "@humeai/voice-react";
 import { Button } from "./ui/button";
-import { Mic, MicOff, Phone } from "lucide-react";
+import { Mic, MicOff, PhoneOff } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { Toggle } from "./ui/toggle";
 import MicFFT from "./MicFFT";
@@ -12,12 +12,11 @@ export default function Controls() {
 
   return (
     <div
-      className={
-        cn(
-          "fixed bottom-0 left-0 w-full p-4 pb-6 flex items-center justify-center",
-          "bg-gradient-to-t from-card via-card/90 to-card/0",
-        )
-      }
+      className={cn(
+        "fixed bottom-0 left-0 w-full p-6 pb-8 flex items-center justify-center",
+        "bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/98 to-[#0A0A0A]/0",
+        "border-t-2 border-vee-red"
+      )}
     >
       <AnimatePresence>
         {status.value === "connected" ? (
@@ -35,11 +34,12 @@ export default function Controls() {
               opacity: 0,
             }}
             className={
-              "p-4 bg-card border border-border/50 rounded-full flex items-center gap-4"
+              "px-6 py-4 glass-effect rounded-3xl flex items-center gap-6 shadow-soft border border-white/10"
             }
           >
+            {/* Mic Toggle */}
             <Toggle
-              className={"rounded-full"}
+              className={"rounded-xl"}
               pressed={!isMuted}
               onPressedChange={() => {
                 if (isMuted) {
@@ -50,30 +50,27 @@ export default function Controls() {
               }}
             >
               {isMuted ? (
-                <MicOff className={"size-4"} />
+                <MicOff className={"size-5"} />
               ) : (
-                <Mic className={"size-4"} />
+                <Mic className={"size-5"} />
               )}
             </Toggle>
 
-            <div className={"relative grid h-8 w-48 shrink grow-0"}>
-              <MicFFT fft={micFft} className={"fill-current"} />
+            {/* FFT Visualizer */}
+            <div className={"relative grid h-10 w-56 shrink grow-0"}>
+              <MicFFT fft={micFft} className={"fill-vee-red"} />
             </div>
 
+            {/* End Call Button */}
             <Button
-              className={"flex items-center gap-1 rounded-full"}
+              className={"flex items-center gap-2 rounded-xl uppercase"}
               onClick={() => {
                 disconnect();
               }}
               variant={"destructive"}
             >
-              <span>
-                <Phone
-                  className={"size-4 opacity-50 fill-current"}
-                  strokeWidth={0}
-                />
-              </span>
-              <span>End Call</span>
+              <PhoneOff className={"size-4"} />
+              <span>END CALL</span>
             </Button>
           </motion.div>
         ) : null}
